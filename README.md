@@ -4,12 +4,11 @@ An AI-powered car subscription and GFV (Guaranteed Future Value) financing compa
 
 ## Screenshots
 
-<!-- Add screenshots here, for example:
-![Catalogue](docs/screenshots/catalogue.png)
-![Compare financing](docs/screenshots/compare-financing.png)
--->
+![Vehicle catalogue](docs/screenshots/S7_06_catalog.png)
 
-_Screenshots coming soon._
+![Compare financing options: Hire Purchase vs GFV leasing](docs/screenshots/S7_08_compare_financing.png)
+
+![AI recommendation: priorities and budget](docs/screenshots/S7_10_compare_ai_recommendation.png)
 
 ## Main features
 
@@ -129,3 +128,8 @@ npm run test:watch  # watch mode
 
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md): detailed per-feature development notes
 - [`docs/photo_credits.md`](docs/photo_credits.md): credits for the vehicle photos
+
+## Data and credits
+
+- **Resale price data:** the ML models are trained on ["Malaysia Resale Carlist"](https://www.kaggle.com/datasets/tanshihjen/malaysia-resale-carlist) by `tanshihjen` on Kaggle, which is licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0). The dataset page describes it as collected by web scraping. A few extra rows were added by hand from Carlist listings. See [`backend/apps/ml/data/README_real_data.md`](backend/apps/ml/data/README_real_data.md) for how the data is used.
+- **Vehicle photos:** see [`docs/photo_credits.md`](docs/photo_credits.md).

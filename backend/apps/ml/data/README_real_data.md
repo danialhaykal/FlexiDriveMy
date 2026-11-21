@@ -20,14 +20,7 @@ Kaggle user `tanshihjen`. Downloaded 2026-09-04 as `resale_car.csv`
 synthetic. (Earlier versions of this file said 974 rows; the file on
 disk has 1,004, confirmed intact during the ML week review.)
 
-**License:** stated on the dataset's Kaggle page, but that page is
-JavaScript-rendered and could not be confirmed by automated fetch for
-this document (the same category of limitation the FYP1 report already
-cites as a reason live scraping was rejected in favour of static,
-admin-managed data). Please note the license shown on the page itself
-(you were logged in when you downloaded it) and fill it in here before
-this goes in the report - do not state a license here that hasn't been
-read directly off the page.
+**License:** Apache 2.0, as shown on the dataset's Kaggle page (checked 2026-11-21). The page describes the data as collected by web scraping.
 
 **Downloaded but deliberately not used:**
 ["Malaysia Car List Price"](https://www.kaggle.com/datasets/norazrinnatasha/malaysia-car-list-price),
@@ -35,9 +28,7 @@ Kaggle user `norazrinnatasha` (`Malaysia_Final_CarList_Compiled.csv`,
 6,000 rows). Every row in this file is brand `"Perodua"`. Perodua
 doesn't offer GFV leasing - this platform's actual target niche - so
 those 6,000 single-brand rows would do nothing for the brands that
-matter and would badly skew a combined dataset. The file is still present
-in `apps/ml/data/raw/` for reference; it's never read by
-`build_real_ml_dataset`.
+matter and would badly skew a combined dataset. The file is not included in this repository; it was never read by `build_real_ml_dataset`.
 
 ## Columns (build v2)
 
