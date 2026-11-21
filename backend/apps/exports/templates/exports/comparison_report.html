@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FlexiDriveMy Comparison Report</title>
+  <style>
+    @page { size: A4; margin: 2cm; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #1a1a1a; font-size: 12px; }
+    h1 { font-size: 20px; margin-bottom: 0.2em; }
+    h2 { font-size: 14px; color: #444; margin-top: 0; font-weight: normal; }
+    .meta { font-size: 11px; color: #444; margin-top: 0.5em; }
+    .generated-at { font-size: 10px; color: #777; margin-top: 0.2em; }
+    /* Run 2 fix batch 1: the captured chart keeps its viewBox, so it scales down
+       to the column (it was drawn at its 943px screen width and ran off the page). */
+    .chart-block { page-break-inside: avoid; margin-top: 1.5em; }
+    .chart { margin: 0.6em 0; text-align: center; page-break-inside: avoid; }
+    .chart svg { width: 100%; height: auto; }
+    .legend { font-size: 11px; color: #333; margin: 0.4em 0 0 0; }
+    .legend span.item { margin-right: 1.5em; white-space: nowrap; }
+    .legend span.swatch { display: inline-block; width: 22px; height: 3px; margin-right: 6px; vertical-align: middle; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; page-break-inside: avoid; }
+    tr { page-break-inside: avoid; }
+    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: right; vertical-align: top; }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: #f2f2f2; }
+    /* Money stays on one line ("RM 338,397.80"); the label column may wrap. */
+    td.num { white-space: nowrap; }
+    td.text { text-align: left; }
+    .extra { margin-top: 0.4em; font-size: 10px; color: #555; font-weight: normal; }
+    .extra div { margin-top: 0.15em; }
+    .rates-note { font-size: 10px; color: #555; margin-top: 1em; }
+    h3.section { font-size: 13px; margin-top: 2em; margin-bottom: 0; page-break-after: avoid; }
+    td[colspan] { text-align: left; color: #555; }
+    /* A section's heading, intro and table stay on one page. */
+    .keep { page-break-inside: avoid; }
+    table.checklist td:first-child { width: 28%; }
+    .alert { border: 1px solid #ccc; border-left-width: 4px; padding: 6px 10px; margin-top: 0.6em; page-break-inside: avoid; }
+    .alert.warning { border-color: #d97706; background: #fffbeb; }
+    .alert.info { border-color: #4f39f6; background: #f5f3ff; }
+    .alert strong { margin-right: 0.5em; }
+    .disclaimer { font-size: 9px; color: #666; margin-top: 3em; border-top: 1px solid #ccc; padding-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>FlexiDriveMy — Comparison Report</h1>
+  <h2>{{ vehicle_label }}</h2>
+  <p class="meta">
+    Tenure: {{ tenure_months }} months &middot; Downpayment: {{ downpayment }} &middot;
+    Mileage band: {{ mileage_band_label }}
+  </p>
+  <p class="generated-at">Generated on {{ generated_at }}</p>
+
+  {% if chart_svg %}
+  <div class="chart-block">
+    <h3 class="section" style="margin-top: 0;">{{ chart.title }}</h3>
+    <p class="rates-note" style="margin-top: 0.3em;">{{ chart.intro }}</p>
+    <div class="chart">{{ chart_svg|safe }}</div>
+    <p class="legend">
+      <span class="item"><span class="swatch" style="background: {{ chart.resale_color }};"></span>Predicted resale value</span>
+      <span class="item"><span class="swatch" style="background: {{ chart.balance_color }};"></span>Amount to settle (estimate)</span>
+    </p>
+    <p class="rates-note" style="margin-top: 0.6em;">{{ chart.settlement_note }}</p>
+  </div>
+  {% endif %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Pathway</th>
+        <th>Monthly Instalment</th>
+        <th>Upfront Cash</th>
+        <th>Total Contract Outlay</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pathway in pathways %}
+      <tr>
+        <td>
+          {{ pathway.label }}
+          {% if pathway.extra %}
+          <div class="extra">
+            {% for item in pathway.extra %}
+            <div>{{ item.label }}: {{ item.value }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </td>
+        {% if pathway.unavailable_reason %}
+        <td colspan="3">Not available: {{ pathway.unavailable_reason }}</td>
+        {% else %}
+        <td class="num">{{ pathway.monthly_instalment }}</td>
+        <td class="num">{{ pathway.upfront_cash }}</td>
+        <td class="num">{{ pathway.total_contract_outlay }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% for note in notes %}
+  <p class="rates-note">{{ note }}</p>
+  {% endfor %}
+
+  {% if pathway_tco_rows %}
+  <h3 class="section">Total cost of ownership by pathway</h3>
+  <table class="pathway-tco">
+    <thead>
+      <tr>
+        <th>Pathway</th>
+        <th>What you pay</th>
+        <th>What you get back</th>
+        <th>Net cost</th>
+        <th>Net cost per month of use</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in pathway_tco_rows %}
+      <tr>
+        <td>{{ row.label }}{% if row.available %}<div class="extra">{{ row.horizon }}</div>{% endif %}</td>
+        {% if row.available %}
+        <td class="num">{{ row.pay }}</td>
+        <td class="num">{{ row.get_back }}</td>
+        <td class="num">{{ row.net }}</td>
+        <td class="num">{{ row.net_per_month }}</td>
+        {% else %}
+        <td colspan="4">{{ row.unavailable_reason }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="rates-note">{{ pathway_tco_note }}</p>
+  {% elif tco_unavailable_reason %}
+  <h3 class="section">Total cost of ownership by pathway</h3>
+  <p class="rates-note">{{ tco_unavailable_reason }}</p>
+  {% endif %}
+
+  {% if tco_sections %}
+  <div class="keep">
+  <h3 class="section">60-month total cost of ownership</h3>
+  <table class="tco-summary">
+    <tbody>
+      <tr><td>Monthly HP instalment</td><td class="num">{{ tco_sections.summary.hp_monthly }}</td></tr>
+      <tr><td>TCO (Hire Purchase, gross, 60 months)</td><td class="num">{{ tco_sections.summary.tco_gross }}</td></tr>
+      <tr><td>TCO (Hire Purchase, net of residual value)</td><td class="num">{{ tco_sections.summary.tco_net }}</td></tr>
+    </tbody>
+  </table>
+  <p class="rates-note">{{ tco_sections.summary.equity_note }}</p>
+  {% if tco_sections.summary.resale_views_note %}
+  <p class="rates-note" style="margin-top: 0.4em;">{{ tco_sections.summary.resale_views_note }}</p>
+  {% endif %}
+  </div>
+
+  <div class="keep">
+  <h3 class="section">Running costs a year</h3>
+  <p class="rates-note" style="margin-top: 0.3em;">{{ tco_sections.running_costs.intro }}</p>
+  <table class="running-costs">
+    <thead>
+      <tr><th>Cost</th><th>Per year</th><th>How it is worked out</th></tr>
+    </thead>
+    <tbody>
+      {% for item in tco_sections.running_costs.items %}
+      <tr>
+        <td>{{ item.label }}</td>
+        <td class="num">{{ item.amount }}</td>
+        <td class="text">{{ item.basis }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="rates-note">{{ tco_sections.running_costs.assumption_note }}</p>
+  {% if tco_sections.running_costs.ncd_note %}
+  <p class="rates-note" style="margin-top: 0.3em;">{{ tco_sections.running_costs.ncd_note }}</p>
+  {% endif %}
+  </div>
+
+  {% if tco_sections.explanation %}
+  <div class="keep">
+  <h3 class="section">Why this predicted value?</h3>
+  {% if tco_sections.explanation.fallback_reason %}
+  <p class="rates-note" style="margin-top: 0.3em;">{{ tco_sections.explanation.fallback_reason }}</p>
+  {% else %}
+  <p class="rates-note" style="margin-top: 0.3em;">{{ tco_sections.explanation.help }}</p>
+  <table class="explanation">
+    <tbody>
+      <tr><td>New price</td><td class="num">{{ tco_sections.explanation.new_price }}</td></tr>
+      {% for row in tco_sections.explanation.rows %}
+      <tr><td>{{ row.label }}</td><td class="num">{{ row.value }}</td></tr>
+      {% endfor %}
+      <tr><td><strong>Predicted resale value</strong></td><td class="num"><strong>{{ tco_sections.explanation.predicted }}</strong></td></tr>
+    </tbody>
+  </table>
+  {% if tco_sections.explanation.forecast_note %}
+  <p class="rates-note">{{ tco_sections.explanation.forecast_note }}</p>
+  {% endif %}
+  {% if tco_sections.explanation.forecast_cap_note %}
+  <p class="rates-note">{{ tco_sections.explanation.forecast_cap_note }}</p>
+  {% endif %}
+  {% endif %}
+  </div>
+  {% endif %}
+
+  {% if tco_sections.risk_alerts %}
+  <h3 class="section">Risk alerts</h3>
+  {% for alert in tco_sections.risk_alerts %}
+  <div class="alert {{ alert.severity }}"><strong>{% if alert.severity == "warning" %}Warning{% else %}Info{% endif %}</strong>{{ alert.message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="keep">
+  <h3 class="section">Contract return checklist</h3>
+  {% if tco_sections.checklist %}
+  <p class="rates-note" style="margin-top: 0.3em;">{{ checklist_intro }}</p>
+  <table class="checklist">
+    <tbody>
+      {% for row in tco_sections.checklist.rows %}
+      <tr><td>{{ row.label }}</td><td class="text">{{ row.value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if tco_sections.checklist.source_note %}
+  <p class="rates-note">{{ tco_sections.checklist.source_note }}</p>
+  {% endif %}
+  {% else %}
+  <p class="rates-note" style="margin-top: 0.3em;">{{ checklist_not_configured }}</p>
+  {% endif %}
+  </div>
+  {% endif %}
+
+  <p class="disclaimer">{{ disclaimer_text }}</p>
+</body>
+</html>

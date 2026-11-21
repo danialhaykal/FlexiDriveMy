@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/*
+ * FlexiDriveMy design tokens (Tailwind v4 CSS-first config).
+ *
+ * Tailwind v4 has no tailwind.config.js by default - theme values are
+ * declared here via @theme and Tailwind auto-generates the matching
+ * utilities (e.g. --color-primary-600 below gives you bg-primary-600,
+ * text-primary-600, border-primary-600, ...; --text-h1 gives you the
+ * text-h1 utility). Components should reach for a token below (or a
+ * default Tailwind slate/spacing utility) instead of an arbitrary value
+ * or a hardcoded hex - see src/components/ui/ for the component library
+ * built on these tokens.
+ *
+ * Look: "Night Drive" - a navy sidebar, one indigo accent, cool grey page,
+ * white cards with a soft shadow, Plus Jakarta Sans for headings and Inter
+ * for body text and figures. One colour per pathway (HP / GFV / Subscription).
+ */
+@theme {
+  /* ---- Typography -----------------------------------------------------
+   * Inter (loaded in index.html) for body text and every number - see the
+   * `numeric` (tabular-nums) helper in src/components/ui/tokens.ts for
+   * column-aligned currency figures. Plus Jakarta Sans (font-display) is for
+   * headings only (h1-h3 pick it up from the base rule at the end of this file).
+   */
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Semantic type scale - prefer these over raw text-sm/text-lg/etc so
+   * headings stay consistent across screens. Pair each with the noted
+   * weight utility at the call site (Tailwind's per-size default-weight
+   * support varies by patch version, so weight isn't assumed here):
+   *   text-display  page hero figures (rare)        + font-semibold
+   *   text-h1       page title                       + font-semibold
+   *   text-h2       section heading                   + font-semibold
+   *   text-h3       card/subsection heading            + font-semibold
+   *   text-body     default body copy (= Tailwind's text-base)
+   *   text-small    secondary/help text
+   *   text-caption  table headers, field labels, timestamps
+   *                 + font-medium, often with uppercase tracking-wide
+   */
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.15;
+  --text-h1: 1.875rem;
+  --text-h1--line-height: 1.25;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.3;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.4;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  /* Headline money figures (StatFigure): Inter, tabular-nums. */
+  --text-money: 2rem;
+  --text-money--line-height: 1.1;
+  --text-money-sm: 1.625rem;
+  --text-money-sm--line-height: 1.15;
+
+  /* ---- Shape -----------------------------------------------------------
+   * rounded-card (Card, panels) and rounded-control (buttons, inputs);
+   * shadow-card is the one card shadow.
+   */
+  --radius-card: 14px;
+  --radius-control: 9px;
+  --shadow-card: 0 1px 2px rgb(15 26 51 / 0.06), 0 4px 14px rgb(15 26 51 / 0.06);
+
+  /* ---- Color: neutral base ---------------------------------------------
+   * Cool grey page, white card/control surfaces, near-black ink. Every text
+   * colour here is at least 4.5:1 on white and on page-bg (ink-muted
+   * #545e73 is 6.51:1 on white, 6.02:1 on page-bg, measured in the browser).
+   */
+  --color-page-bg: #f4f6fb;
+  --color-surface: var(--color-white);
+  --color-surface-subtle: var(--color-slate-100);
+  --color-border: #dfe4ee;
+  --color-border-strong: var(--color-slate-300);
+  --color-ink: #111827;
+  --color-ink-muted: #545e73;
+  /* Run 3 fix batch 5 (F-28): was slate-400 (2.63:1 on white, below WCAG AA's 4.5:1).
+     Text in this colour ("Not available", "Not applicable") is the same tone as ink-muted. */
+  --color-ink-subtle: #545e73;
+
+  /* ---- Color: sidebar (navy) --------------------------------------------- */
+  --color-side: #0f1a33;
+  --color-side-ink: #c9d2e6;
+  --color-side-label: #8d9abb;
+  --color-side-active-bg: #1f2c4d;
+  --color-side-active: #ffffff;
+
+  /* ---- Color: pathway keys -----------------------------------------------
+   * One colour per financing pathway, the same on every card, chart and badge.
+   */
+  --color-pathway-hp: var(--color-primary-600);
+  --color-pathway-gfv: #b45309;
+  --color-pathway-sub: #0f766e;
+
+  /* ---- Color: primary accent --------------------------------------------
+   * ONE confident accent (deep indigo) for primary actions and key
+   * highlights, aliased onto Tailwind's indigo scale. Never introduce a
+   * second accent hue in a component.
+   * DO NOT CHANGE these aliases (nor the danger ones below): the PDF export
+   * captures the chart's computed colours, and the server PDF template
+   * hard-codes the same two values (#4f39f6 indigo-600, #e7000b red-600).
+   */
+  --color-primary-50: var(--color-indigo-50);
+  --color-primary-100: var(--color-indigo-100);
+  --color-primary-200: var(--color-indigo-200);
+  --color-primary-300: var(--color-indigo-300);
+  --color-primary-400: var(--color-indigo-400);
+  --color-primary-500: var(--color-indigo-500);
+  --color-primary-600: var(--color-indigo-600);
+  --color-primary-700: var(--color-indigo-700);
+  --color-primary-800: var(--color-indigo-800);
+  --color-primary-900: var(--color-indigo-900);
+
+  /* ---- Color: financial/system semantic states --------------------------
+   * Reserve these for genuine financial-state or system-status meaning
+   * (e.g. Badge tone) - not as a general-purpose extra color palette.
+   *   positive  "on track" / affordable / within DSR
+   *   warning   approaching a risk threshold (DSR limit, negative equity)
+   *   danger    threshold exceeded, or an error
+   */
+  --color-positive-50: var(--color-emerald-50);
+  --color-positive-100: var(--color-emerald-100);
+  --color-positive-200: var(--color-emerald-200);
+  --color-positive-600: var(--color-emerald-600);
+  --color-positive-700: var(--color-emerald-700);
+
+  --color-warning-50: var(--color-amber-50);
+  --color-warning-100: var(--color-amber-100);
+  --color-warning-200: var(--color-amber-200);
+  --color-warning-600: var(--color-amber-600);
+  --color-warning-700: var(--color-amber-700);
+
+  --color-danger-50: var(--color-red-50);
+  --color-danger-100: var(--color-red-100);
+  --color-danger-200: var(--color-red-200);
+  --color-danger-600: var(--color-red-600);
+  --color-danger-700: var(--color-red-700);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-page-bg);
+  color: var(--color-ink);
+}
+
+/* Headings use the display face everywhere; size and weight stay with each
+   heading's own classes (text-h1/h2/h3 + font-semibold). */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* A scroll area with no visible scrollbar (it still scrolls with a wheel,
+   a swipe or the keyboard) - e.g. the tab row on a phone. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

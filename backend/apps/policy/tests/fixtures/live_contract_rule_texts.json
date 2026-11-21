@@ -1,0 +1,19 @@
+{
+  "_note": "The six active ContractPenaltyRule.wear_tear_tolerance_description texts, copied read-only from the dev database on 2026-10-20 after refresh_contract_rule_texts --apply (run 2 fix batch 3: Toyota and Lexus no longer name one model; first copied 2026-10-13, run 1 fix batch 1). Regression fixture for apps.policy.rule_text: every one must stay unchanged and name no model. Keyed by brand; 'default' is the brand-less rule. 'models' is the dev catalog's active cars per brand as [name, trim].",
+  "texts": {
+    "Toyota": "Toyota KINTO ONE (published terms, kinto-my.com/faqs): the returned car is checked against KINTO's Fair Wear & Tear document and repair costs are charged depending on how severe the damage is. Excess mileage is RM0.20-0.50/km depending on model; RM0.50 (top of range) is used here as the estimate for this brand's cars. Early return costs 6 months' subscription fee or the remaining balance, whichever is lower. All servicing must be done at authorised Toyota dealers.",
+    "Lexus": "Lexus KINTO ONE (published terms, kinto-my.com/faqs): the returned car is checked against KINTO's Fair Wear & Tear document and repair costs are charged depending on how severe the damage is. Excess mileage is RM0.20-0.50/km depending on model; RM0.50 (top of range) is used here as the estimate for this brand's cars. Early return costs 6 months' subscription fee or the remaining balance, whichever is lower. All servicing must be done at authorised Lexus dealers.",
+    "BMW": "BMW Easy Drive (bmw.com.my): annual mileage is 20,000 or 25,000 km, and charges for excess mileage and vehicle condition are assessed by an independent appraiser when the car is returned. BMW Malaysia does not publish a per-km rate or an early-termination fee, so both figures here are ESTIMATES: RM0.50/km is the top of the only published Malaysian range (KINTO ONE), and the early-return months come from the default rule. Confirm real figures with BMW Financial Services.",
+    "Mercedes-Benz": "Mercedes-Benz Agility+ (as reported by zigwheels.my): annual mileage is 10,000 to 30,000 km, excess km are chargeable, and a returned car is assessed against fair wear and tear. Mercedes-Benz Malaysia does not publish a per-km rate or an early-termination fee, so both figures here are ESTIMATES: RM0.50/km is the top of the only published Malaysian range (KINTO ONE), and the early-return months come from the default rule. Confirm real figures with Mercedes-Benz Services Malaysia.",
+    "Porsche": "Porsche 360 Financing (paultan.org): the car can be returned at end of term subject to fair wear and tear and possible excess mileage charges. High-performance brake pads, carbon-ceramic rotors and tyres are excluded from basic service plans, so worn parts at return can be costly. Porsche Malaysia does not publish a per-km rate or an early-termination fee, so both figures here are ESTIMATES: RM0.50/km is the top of the only published Malaysian range (KINTO ONE), and the early-return months come from the default rule. Confirm real figures with Porsche Financial Services.",
+    "default": "Normal wear and tear for the car's age and mileage is accepted; damage beyond that (deep dents, torn upholstery, tyres below the legal tread depth, missing items) is billed at repair cost on return."
+  },
+  "models": {
+    "BMW": [["3 Series", "320i Sport"]],
+    "Lexus": [["ES", "250 Luxury"]],
+    "Mercedes-Benz": [["C-Class", "C200 Avantgarde"]],
+    "Porsche": [["911", "Carrera"], ["Macan", "Base"], ["Macan Electric", "Macan RWD"]],
+    "Toyota": [["Alphard", "2.4 Executive Lounge"]],
+    "Volvo": [["XC60", "B5 Core"], ["XC90", "Ultra T8"]]
+  }
+}

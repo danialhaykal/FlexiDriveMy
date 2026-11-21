@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest>=8.0,<9.0
+pytest-django>=4.9,<5.0
+# Test-only: extracts text from generated PDFs to verify F008's disclaimer
+# survives compilation. Not needed to *generate* PDFs (that's weasyprint).
+pypdf>=5.0,<6.0
+# Load testing (F005 NFR verification) - not needed to run the app itself.
+locust>=2.30,<3.0
+waitress>=3.0,<4.0

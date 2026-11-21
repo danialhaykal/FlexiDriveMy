@@ -1,0 +1,15 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+staticfiles/
+db.sqlite3
+ml_models/
+ml_data/
+/exports/
+loadtest/results*.csv
+loadtest/diag_*.csv
+loadtest/report.html
+loadtest/*.log
